@@ -2,19 +2,39 @@
 
 <!-- Step 1: List all transactions, starting with the ICO -->
 
-<ol>
+<table>
+  <tr>
+    <th>Transaction</th>
+  </tr>
   <% @transactions.each do |transaction| %>
-    <li>
-      <% if transaction.from_user %>
-        <%= "#{transaction.amount} KC from #{transaction.from_user.name} to #{transaction.to_user.name}" %>
-      <% else %>
-        Initial coin offering: <%= "#{transaction.amount} to #{transaction.to_user.name}" %>
-      <% end %>
-    </li>
+    <tr>
+      <td>
+        <% if transaction.from_user %>
+          <%= "#{transaction.amount} KC from #{transaction.from_user.name} to #{transaction.to_user.name}" %>
+        <% else %>
+          Initial coin offering: <%= "#{transaction.amount} to #{transaction.to_user.name}" %>
+        <% end %>
+      </td>
+    </tr>
   <% end %>
-</ol>
+</table>
 
 <!-- Step 2: Calculate and display the balances -->
+
+<h2>User Balances</h2>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Balance</th>
+  </tr>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= Transaction.where(to_user_id: user.id).sum(:amount) - Transaction.where(from_user_id: user.id).sum(:amount) %> KC</td>
+    </tr>
+  <% end %>
+</table>
 
 <!-- 
 Expected balances:
